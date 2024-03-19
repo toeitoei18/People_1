@@ -1,0 +1,77 @@
+﻿@page "/Person"
+
+<PageTitle>People</PageTitle>
+
+<h3>People</h3>
+
+<ul>
+    @foreach (var Name in Names) //สร้างตัวแปรเพื่อรองรับข้อมูลจาก obj Names โดยลูปข้อมูลตาม index ที่มาใช้งาน obj ภายใต้ Names
+    {
+        <li>
+             <input type="checkbox" @bind="Name.IsDone"/> @*แสดงกล่อง checkbox  พร้อมติ๊กถูก (bind)=> แสดง value ตาม obj ของ Name ตาม index *@
+             <input @bind="Name.Title" />  @*แสดงชื่อที่กรอกไปเพิ่มออกมา*@
+            @*<button @onclick="() => RemoveTodo(Name)">ลบรายการ</button>*@
+        
+            @* @Name.Title *@
+        </li>
+    @foreach (var Sex in Sexs) //วนลูปชื่อที่เพิ่มเข้ามา
+    {
+        <li>
+            <input type="checkbox" @bind="Sex.IsDone"/> @*แสดงกล่อง checkbox  พร้อมติ๊กถูก*@
+            <input @bind="Sex.Title" />  @*แสดงชื่อที่กรอกไปเพิ่มออกมา*@          
+            @*@Sex.Title*@
+        </li>
+    <button @onclick="() => RemoveTodo(Name,Sex)">ลบรายการ</button> //คลิกปุ่มRemove เพื่อลบรายการ Nameและ Sex พร้อมกัน โดยเรียกใช้ฟังก์ชัน RemoveTodo() ที่ส่ง parameter Name กับ Sex
+    }
+    }
+    @* @foreach (var Age in Ages) *@
+    @* { *@
+    @* <li>@Age.Integer</li> *@
+    @* } *@
+</ul>
+
+<input placeholder="กรอกชื่อที่นี้" @bind="newName" />  @*ช่องว่างมีคำว่ากรอก ก่อนใส่ข้อมูลที่จะเพิ่ม*@
+<input placeholder="กรอกเพศที่นี้" @bind="newSex" />
+@* <input placeholder="กรอกอายุที่นี้" @bind="newAge" /> *@
+<button @onclick="AddTodo">เพิ่มข้อมูล</button> @*คลิกปุ่ม AddTodo เพื่อเพิ่มรายการ Nameและ Sex พร้อมกัน*@
+
+@code {
+    private List<PeopleItem> Names = new(); //เป็นการประกาศ new instance ใหม่เพื่อใช้งาน class PeopleItem ที่มี obj อยู่ โดยมี datatype เป็น list
+    private List<PeopleSex> Sexs = new(); //
+    //private List<PeopleItem> Ages = new();
+    
+    private string? newName;  //ถ้า obj newName ไม่เป็นค่าว่างให้นำค่ามาใส่แต่ถ้าเป็นค่าว่างก็เป็นค่าว่างเหมือนเดิม 
+    private string? newSex;
+    //private int? newAge;
+
+    private void AddTodo() //โลจิกส์การเพิ่มรายการ. ฟังก์ชันสำหรับการทำรายการ
+    {
+        if (!string.IsNullOrWhiteSpace(newName  )) //ถ้า String ไม่เท่ากับNullหรือWhiteSpace ให้ทำเงื่อนไขนี้
+        {
+            Names.Add(new PeopleItem { Title = newName}); //เรียกใช้ obj Names ที่เรียกใช้ method Add โดย new instance PeopleItem ใหม่ที่ส่งค่า arguments newName ไปใน obj ของ Title 
+            newName = string.Empty; //ทำให้ obj กลับมาเป็นค่าว่าง
+        }
+        if (!string.IsNullOrWhiteSpace(newSex))
+        {
+            Sexs.Add(new PeopleSex { Title = newSex});
+            newSex = string.Empty;
+        }
+    }
+    //private void RemoveTodo(PeopleItem Name )
+    //{
+       // Names.Remove(Name);
+    //}
+
+    private void RemoveTodo(PeopleItem Name , PeopleSex Sex) //รับค่าโดยไม่มีการรีเทริน โดยกำหนดคลาส PeopleItem กับ PeopleSex เป็น datatype
+    {
+        Names.Remove(Name); //เรียกใช้ Method Remove ที่อยู่ภายใต้ obj โดยส่งอากิวเม้น Name
+        Sexs.Remove(Sex);
+    }
+
+    //    if (!int.WhiteSpace(newAge))
+    //   {
+    //        Ages.Add(new PeopleItem { Integer = newAge});
+    //        newAge = int.Empty;
+    //    }
+    
+}
